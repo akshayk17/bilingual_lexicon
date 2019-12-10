@@ -50,7 +50,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-ROOT_URLCONF = 'ir_bll.urls'
+ROOT_URLCONF = 'bilingual_lexicon.urls'
 
 TEMPLATES = [
     {
@@ -68,7 +68,7 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'ir_bll.wsgi.application'
+WSGI_APPLICATION = 'bilingual_lexicon.wsgi.application'
 
 
 # Database
