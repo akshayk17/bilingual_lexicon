@@ -1,7 +1,6 @@
-from django.shortcuts import render  
-from django.http import HttpResponse  
+from django.shortcuts import render
 import os
-from .forms import CorporaForm  
+from .forms import CorporaForm
 
 
 def project(engfile, hindifile):
@@ -11,6 +10,7 @@ def project(engfile, hindifile):
     from collections import defaultdict
 
     vector_length = 200
+
     # engfile = 'ir_english .txt'
     # hindifile = 'ir_hindi.txt'
 
@@ -19,7 +19,6 @@ def project(engfile, hindifile):
         for i in str1:
             val = val + str(ord(i))
         return int(val)
-
 
     def getIndexVector(i):
         binary = list(bin(i))
@@ -31,7 +30,6 @@ def project(engfile, hindifile):
         s = temp + s
         return s
 
-
     def getFirstChar(sentence):
         sentence = sentence.strip()
         if len(sentence) > 0:
@@ -40,21 +38,20 @@ def project(engfile, hindifile):
             for i in range(len(sentence)):
                 if sentence[i] == ' ':
                     try:
-                        s = s+sentence[i+1]
+                        s = s + sentence[i + 1]
                     except IndexError:
-                        s = s+'a'
+                        s = s + 'a'
                     finally:
-                        s = s+'a'
+                        s = s + 'a'
 
             return s.lower()
         else:
             return ' '
 
-
     dict1 = defaultdict(list)
     sentence_random_vector = {}
     cv_each_word = {}
-    punctuation = [',', '"', "''", "\n","!","-",]
+    punctuation = [',', '"', "''", "\n", "!", "-", ]
     file = open(engfile, 'r')
     content = file.read()
     file.close()
@@ -74,7 +71,7 @@ def project(engfile, hindifile):
 
     # for i in range(len(content)):
     #     sentence_random_vector[i] = getIndexVector(i)
-    c= 0
+    c = 0
     for sen in content:
         li = []
         comp = getFirstChar(sen)
@@ -82,12 +79,10 @@ def project(engfile, hindifile):
 
         for k in range(vector_length):
             random.seed(asci)
-            li.append(random.randint(-1,1))
-            asci = asci+1
+            li.append(random.randint(-1, 1))
+            asci = asci + 1
         sentence_random_vector[c] = li
-        c+=1
-
-
+        c += 1
 
     # print(sentence_random_vector)
     # print(dict1)
@@ -127,7 +122,7 @@ def project(engfile, hindifile):
         for j in cv_each_word_hindi:
             # print(i, j)
             result[j] = np.dot(cv_each_word[i], cv_each_word_hindi[j]) / (
-                        np.linalg.norm(cv_each_word[i]) * np.linalg.norm(cv_each_word_hindi[j]))
+                    np.linalg.norm(cv_each_word[i]) * np.linalg.norm(cv_each_word_hindi[j]))
         final_result_dict[i] = result
 
     for i in final_result_dict:
@@ -145,27 +140,25 @@ def project(engfile, hindifile):
         final_list.append(i_list)
     return final_list
 
-#project('deepesh_english.txt','deepesh_hindi.txt')
+
+# project('deepesh_english.txt','deepesh_hindi.txt')
 
 
-def getFiles(request):  
-    if request.method == 'POST':  
+def getFiles(request):
+    if request.method == 'POST':
         corpora = CorporaForm(request.POST, request.FILES)
-        language = request.POST.get("group1")
-        
-        if corpora.is_valid():  
-            corpora.save()
-            english='media/media/english.txt'
-            if language=='1':
-                hindi='media/media/hindi.txt'
-            else:
-                hindi='media/media/bengali.txt'
-            final_list=project(english,hindi)
+
+        if corpora.is_valid():
+            corpora_object = corpora.save(commit=True)
+            print(corpora_object.lang1)
+            english = 'media/' + str(corpora_object.lang1)
+            hindi = 'media/' + str(corpora_object.lang2)
+            final_list = project(english, hindi)
             os.remove(english)
             os.remove(hindi)
-            return render(request,'home/table.html',{'final_list':final_list})
+            return render(request, 'home/table.html', {'final_list': final_list})
 
             # return HttpResponse("File uploaded successfuly")  
-    else:  
-        corpora = CorporaForm()  
-        return render(request,"home/home.html",{'form':corpora})  
+    else:
+        corpora = CorporaForm()
+        return render(request, "home/home.html", {'form': corpora})

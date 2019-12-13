@@ -17,20 +17,10 @@
         <h2><b>Bilingual Lexicon</b></h2>
         <h4>This is the Information Retrieval Project that was taken under Dr. Rajendra Prasath(IIIT Sri City) for the 2019 semester.</h4>
         <form method="POST" class="post-form" enctype="multipart/form-data">  
-                {% csrf_token %}  
-                <p>
-                    <b>Select Language</b><br>
-                    <label>
-                        <input name="group1" type="radio" value=1 checked />
-                        <span>Hindi</span>
-                    </label><br>
-                    <label>
-                        <input name="group1" type="radio" value=2 />
-                        <span>Bengali</span>
-                    </label>
-                </p>
+                {% csrf_token %}
                 
                 <!-- Enter language <input type="text" name="langname"> -->
+            <strong style="color: red">Lang1 should be English file and Lang2 should be either Hindi or Bengali translation of corresponding English file.</strong><br>
                 {{ form.as_p }}  
                 <button type="submit" class="save btn btn-default">Generate</button>  
         </form> 
